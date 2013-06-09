@@ -3,7 +3,8 @@
   :url "http://github.com/alxlit/autoclave-clj"
   :license {:name "Eclipse Public License"
             :url "http://www.eclipse.org/legal/epl-v10.html"}
-  :codox {:output-dir "doc/codox"}
+  :codox {:output-dir "doc/codox"
+          :src-dir-uri "http://github.com/alxlit/autoclave/blob/master"}
   :dependencies [[org.clojure/clojure "1.5.1"]
                  [com.googlecode.owasp-java-html-sanitizer/owasp-java-html-sanitizer "r173"]]
 

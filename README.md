@@ -1,9 +1,8 @@
 # autoclave
 
 A library for sanitizing various kinds of user input. The idea is to provide a
-simple, convenient API that builds upon existing, proven libraries such as the
-[OWASP][owasp] [JSON Sanitizer][owasp-json] and [HTML Sanitizer][owasp-html]
-projects.
+simple, convenient API that builds upon existing, proven libraries such as
+[OWASP][owasp]'s [JSON Sanitizer][owasp-json] and [HTML Sanitizer][owasp-html].
 
 ## Installation
 

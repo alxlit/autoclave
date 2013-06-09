@@ -1,6 +1,6 @@
 (defproject autoclave "0.1.0"
   :description "A library for sanitizing various kinds of user input."
-  :url "http://github.com/alxlit/autoclave-clj"
+  :url "http://github.com/alxlit/autoclave"
   :license {:name "Eclipse Public License"
             :url "http://www.eclipse.org/legal/epl-v10.html"}
   :codox {:output-dir "doc/codox"

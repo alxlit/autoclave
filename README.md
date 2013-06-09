@@ -1,13 +1,11 @@
-# autoclave-clj
+# autoclave
 
 A library for sanitizing various kinds of user input. The idea is to provide a
-simple, convenient API that is built upon existing, proven libraries.
+simple, convenient API that is built upon existing, proven libraries such as:
 
-  * JSON, using [OWASP JSON Sanitizer][owasp-json] (included locally, as it
-    isn't available from any repositories afaik)
-  * HTML, using [OWASP HTML Sanitizer][owasp-html]
-
-Feel free to contribute.
+  * [OWASP's JSON Sanitizer][owasp-json], which is included locally because it
+    isn't available from any repositories as far as I know
+  * [OWASP HTML Sanitizer][owasp-html]
 
 ## Installation
 
@@ -17,15 +15,17 @@ Feel free to contribute.
 
 ## Usage
 
+```clj
+(require '[autoclave.core :refer :all])
+```
+
 ### JSON
 
 The `json-sanitize` function takes JSON-like content and produces well-formed
-JSON, and even deals with XSS vulnerabilities. Read [this][owasp-json] for more
-information.
+JSON, and even deals with XSS vulnerabilities. Read [this][owasp-json-gc] for
+more detailed information.
 
 ```clj
-(require '[autoclave.core :refer :all])
-
 (json-sanitize "{some: 'derpy json' n: +123}")
 ; "{\"some\": \"derpy json\" ,\"\":\"n\" ,\"\":123}"
 ```
@@ -36,8 +36,6 @@ By default the `html-sanitize` function strips all HTML from a string, encodes
 entities, and deals with XSS vulnerabilities.
 
 ```clj
-(require '[autoclave.core :refer :all])
-
 (html-sanitize "Hello, <script>alert(\"0wn3d\");</script> world!")
 ; "Hello, world!"
 ```
@@ -55,11 +53,9 @@ and attributes with fine-grained control.
 ; "<a href=\"http://github.com\" rel=\"nofollow\">GitHub</a>"
 ```
 
-See the [documentation][docs] for more details.
-
 ## License
 
-Copyright © 2013 alxlit
+Copyright © 2013 Alex Little
 
 Distributed under the Eclipse Public License, the same as Clojure.
 

@@ -51,6 +51,10 @@ and attributes with fine-grained control.
 ; "<a href=\"http://github.com\" rel=\"nofollow\">GitHub</a>"
 ```
 
+## Documentation
+
+  * [API](http://alxlit.github.io/autoclave/codox)
+
 ## License
 
 Copyright © 2013 Alex Little

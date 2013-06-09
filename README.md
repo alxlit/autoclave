@@ -3,7 +3,7 @@
 A library for sanitizing various kinds of user input. The idea is to provide a
 simple, convenient API that is built upon existing, proven libraries such as:
 
-  * [OWASP's JSON Sanitizer][owasp-json], which is included locally because it
+  * [OWASP JSON Sanitizer][owasp-json], which is included locally because it
     isn't available from any repositories as far as I know
   * [OWASP HTML Sanitizer][owasp-html]
 

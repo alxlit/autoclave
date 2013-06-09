@@ -1,4 +1,4 @@
-(defproject autoclave-clj "0.1.0"
+(defproject autoclave "0.1.0"
   :description "A library for sanitizing various kinds of user input."
   :url "http://github.com/alxlit/autoclave-clj"
   :license {:name "Eclipse Public License"

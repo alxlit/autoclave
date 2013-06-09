@@ -1,11 +1,9 @@
 # autoclave
 
 A library for sanitizing various kinds of user input. The idea is to provide a
-simple, convenient API that is built upon existing, proven libraries such as:
-
-  * [OWASP JSON Sanitizer][owasp-json], which is included locally because it
-    isn't available from any repositories as far as I know
-  * [OWASP HTML Sanitizer][owasp-html]
+simple, convenient API that builds upon existing, proven libraries such as the
+[OWASP][owasp] [JSON Sanitizer][owasp-json] and [HTML Sanitizer][owasp-html]
+projects.
 
 ## Installation
 
@@ -21,9 +19,10 @@ simple, convenient API that is built upon existing, proven libraries such as:
 
 ### JSON
 
-The `json-sanitize` function takes JSON-like content and produces well-formed
-JSON, and even deals with XSS vulnerabilities. Read [this][owasp-json-gc] for
-more detailed information.
+The `json-sanitize` function takes JSON-like content and produces well-formed,
+[RFC 4627](https://www.ietf.org/rfc/rfc4627.txt) compliant JSON that is safe to
+embed in `<script>` elements and XML CDATA sections. See [here](owasp-json-gc)
+for more details.
 
 ```clj
 (json-sanitize "{some: 'derpy json' n: +123}")
@@ -60,6 +59,7 @@ Copyright © 2013 Alex Little
 Distributed under the Eclipse Public License, the same as Clojure.
 
 [docs]: TODO
+[owasp]: https://www.owasp.org/
 [owasp-json]: https://www.owasp.org/index.php/OWASP_JSON_Sanitizer
 [owasp-json-gc]: https://code.google.com/p/json-sanitizer/
 [owasp-html]: https://www.owasp.org/index.php/OWASP_Java_HTML_Sanitizer

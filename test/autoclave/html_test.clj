@@ -1,8 +1,8 @@
 (ns autoclave.html_test
-  "Taken from OWASP HTML Sanitizer's own test suite."
-  (:require [clojure.test :refer (deftest is)]
-            [clojure.string :as string]
-            [autoclave.html :as html]))
+  "Taken from the OWASP HTML Sanitizer test suite."
+  (:require [autoclave.core :refer [html-policy html-sanitize]]
+            [clojure.test :refer [deftest is]]
+            [clojure.string :as string]))
 
 (def example
   (str "<h1 id='foo'>Header</h1>\n"
@@ -18,8 +18,8 @@
        "          direction: rtl; font-weight: bold'>Stylish Para 2</p>\n"))
 
 (deftest test-text-filter
-  (let [policy (html/policy)]
-    (is (= (html/sanitize policy example)
+  (let [policy (html-policy)]
+    (is (= (html-sanitize policy example)
            (str "Header\n"
                 "Paragraph 1\n"
                 "Click me out\n"
@@ -29,8 +29,8 @@
                 "Stylish Para 2\n")))))
 
 (deftest test-canned-formatting-tag-filter
-  (let [policy (html/policy :allow-common-inline-formatting-elements)]
-    (is (= (html/sanitize policy example)
+  (let [policy (html-policy :allow-common-inline-formatting-elements)]
+    (is (= (html-sanitize policy example)
            (str "Header\n"
                 "Paragraph 1\n"
                 "Click me out\n"
@@ -40,9 +40,9 @@
                 "Stylish Para 2\n")))))
 
 (deftest test-canned-formatting-tag-filter-no-italics
-  (let [policy (html/policy :allow-common-inline-formatting-elements
+  (let [policy (html-policy :allow-common-inline-formatting-elements
                             :disallow-elements ["i"])]
-    (is (= (html/sanitize policy example)
+    (is (= (html-sanitize policy example)
            (str "Header\n"
                 "Paragraph 1\n"
                 "Click me out\n"
@@ -52,8 +52,8 @@
                 "Stylish Para 2\n")))))
 
 (deftest test-simple-tag-filter
-  (let [policy (html/policy :allow-elements ["h1" "i"])]
-    (is (= (html/sanitize policy example)
+  (let [policy (html-policy :allow-elements ["h1" "i"])]
+    (is (= (html-sanitize policy example)
            (str "<h1>Header</h1>\n"
                 "Paragraph 1\n"
                 "Click me out\n"
@@ -63,9 +63,9 @@
                 "Stylish Para 2\n")))))
 
 (deftest test-links-allowed
-  (let [policy (html/policy :allow-elements ["a"]
+  (let [policy (html-policy :allow-elements ["a"]
                             :allow-attributes ["href" :on-elements ["a"]])]
-    (is (= (html/sanitize policy example)
+    (is (= (html-sanitize policy example)
            (str "Header\n"
                 "Paragraph 1\n"
                 "Click <a href=\"foo.html\">me</a> out\n"
@@ -75,10 +75,10 @@
                 "Stylish Para 2\n")))))
 
 (deftest test-external-links-allowed
-  (let [policy (html/policy :allow-elements ["a"]
+  (let [policy (html-policy :allow-elements ["a"]
                             :allow-standard-url-protocols
                             :allow-attributes ["href" :on-elements ["a"]])]
-    (is (= (html/sanitize policy example)
+    (is (= (html-sanitize policy example)
            (str "Header\n"
                 "Paragraph 1\n"
                 "Click <a href=\"foo.html\">me</a>"
@@ -89,10 +89,10 @@
                 "Stylish Para 2\n")))))
 
 (deftest test-links-with-nofollow
-  (let [policy (html/policy :allow-elements ["a"]
+  (let [policy (html-policy :allow-elements ["a"]
                             :allow-attributes ["href" :on-elements ["a"]]
                             :require-rel-nofollow-on-links)]
-    (is (= (html/sanitize policy example)
+    (is (= (html-sanitize policy example)
            (str "Header\n"
                 "Paragraph 1\n"
                 "Click <a href=\"foo.html\" rel=\"nofollow\">me</a> out\n"
@@ -102,11 +102,11 @@
                 "Stylish Para 2\n")))))
 
 (deftest test-images-allowed
-  (let [policy (html/policy
+  (let [policy (html-policy
                  :allow-elements ["img"]
                  :allow-attributes ["src" "alt" :on-elements ["img"]]
                  :allow-url-protocols ["https"])]
-    (is (= (html/sanitize policy example)
+    (is (= (html-sanitize policy example)
            (str "Header\n"
                 "Paragraph 1\n"
                 "Click me out\n"
@@ -116,12 +116,12 @@
                 "Stylish Para 2\n")))))
 
 (deftest test-style-filtering
-  (let [policy (html/policy
+  (let [policy (html-policy
                  :allow-common-inline-formatting-elements
                  :allow-common-block-elements
                  :allow-styling
                  :allow-standard-url-protocols)]
-    (is (= (html/sanitize policy example)
+    (is (= (html-sanitize policy example)
            (str "<h1>Header</h1>\n"
                 "<p>Paragraph 1</p>\n"
                 "<p>Click me out</p>\n"
@@ -133,7 +133,7 @@
                 "Stylish Para 2</p>\n")))))
 
 (deftest test-element-transforming
-  (let [policy (html/policy
+  (let [policy (html-policy
                  :allow-elements ["h1" "p" "div"]
                  :allow-elements [(fn [element-name attrs]
                                     (.add attrs "class")
@@ -141,7 +141,7 @@
                                     "div")
                                   "h1"])]
 
-    (is (= (html/sanitize policy example)
+    (is (= (html-sanitize policy example)
            (str "<div class=\"header-h1\">Header</div>\n"
                 "<p>Paragraph 1</p>\n"
                 "<p>Click me out</p>\n"
@@ -151,11 +151,11 @@
                  "<p>Stylish Para 2</p>\n")))))
 
 (deftest test-allow-url-protocols
-  (let [policy (html/policy
+  (let [policy (html-policy
                  :allow-elements ["img"]
                  :allow-attributes ["src" "alt" :on-elements ["img"]]
                  :allow-url-protocols ["http"])]
-    (is (= (html/sanitize policy example)
+    (is (= (html-sanitize policy example)
            (str "Header\n"
                 "Paragraph 1\n"
                 "Click me out\n"

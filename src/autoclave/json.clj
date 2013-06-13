@@ -1,5 +1,5 @@
 (ns autoclave.json
-  "Wraps the OWASP JSON Sanitizer project."
+  "Wraps the OWASP JSON Sanitizer."
   (:import [com.google.json JsonSanitizer]))
 
 (defn sanitize

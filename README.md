@@ -30,11 +30,10 @@ for more details.
 
 ### HTML
 
-By default the `html-sanitize` function strips all HTML from a string, encodes
-entities, and deals with XSS vulnerabilities.
+By default the `html-sanitize` function strips all HTML from a string.
 
 ```clj
-(html-sanitize "Hello, <script>alert(\"0wn3d\");</script> world!")
+(html-sanitize "Hello, <script>alert(\"0wn3d\");</script>world!")
 ; "Hello, world!"
 ```
 

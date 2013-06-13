@@ -10,7 +10,7 @@ included locally, unmodified, in `src/java/com/google/json`.
 ## Installation
 
 ```clj
-:dependencies [[autoclave "0.1.0"]]
+:dependencies [[autoclave "0.1.2"]]
 ```
 
 ## Usage

@@ -1,6 +1,6 @@
 (ns autoclave.html_test
   "Taken from the OWASP HTML Sanitizer test suite."
-  (:require [autoclave.core :refer [html-policy html-sanitize]]
+  (:require [autoclave.core :refer :all]
             [clojure.test :refer [deftest is]]
             [clojure.string :as string]))
 
@@ -116,11 +116,10 @@
                 "Stylish Para 2\n")))))
 
 (deftest test-style-filtering
-  (let [policy (html-policy
-                 :allow-common-inline-formatting-elements
-                 :allow-common-block-elements
-                 :allow-styling
-                 :allow-standard-url-protocols)]
+  (let [policy (html-policy :allow-common-inline-formatting-elements
+                            :allow-common-block-elements
+                            :allow-styling
+                            :allow-standard-url-protocols)]
     (is (= (html-sanitize policy example)
            (str "<h1>Header</h1>\n"
                 "<p>Paragraph 1</p>\n"
@@ -151,10 +150,9 @@
                  "<p>Stylish Para 2</p>\n")))))
 
 (deftest test-allow-url-protocols
-  (let [policy (html-policy
-                 :allow-elements ["img"]
-                 :allow-attributes ["src" "alt" :on-elements ["img"]]
-                 :allow-url-protocols ["http"])]
+  (let [policy (html-policy :allow-elements ["img"]
+                            :allow-attributes ["src" "alt" :on-elements ["img"]]
+                            :allow-url-protocols ["http"])]
     (is (= (html-sanitize policy example)
            (str "Header\n"
                 "Paragraph 1\n"
@@ -164,4 +162,8 @@
                 "Fancy with soupy tags.\n"
                 "Stylish Para 1\n"
                 "Stylish Para 2\n")))))
+
+(deftest test-merge-policies
+  (let [policy (html-policy :BLOCKS :LINKS)]
+    nil))
 

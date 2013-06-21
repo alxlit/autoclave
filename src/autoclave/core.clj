@@ -1,8 +1,8 @@
 (ns autoclave.core
-  "For convenience this namespace provides aliases to commonly-used functions,
-   so that one may :use or :refer :all it."
+  "Provides aliases to the important bits."
   (:require [autoclave.html :as html]
-            [autoclave.json :as json]))
+            [autoclave.json :as json]
+            [autoclave.markdown :as markdown]))
 
 (def html-sanitize
   "Alias for html/sanitize."
@@ -20,3 +20,14 @@
   "Alias for json/sanitize."
   json/sanitize)
 
+(def markdown-link-renderer
+  "Alias for markdown/link-renderer."
+  markdown/link-renderer)
+
+(def markdown-processor
+  "Alias for markdown/processor."
+  markdown/processor)
+
+(def markdown-to-html
+  "Alias for markdown/to-html"
+  markdown/to-html)

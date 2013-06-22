@@ -268,7 +268,7 @@ Distributed under the Eclipse Public License, the same as Clojure.
 [html-policy-builder]: https://owasp-java-html-sanitizer.googlecode.com/svn/trunk/distrib/javadoc/org/owasp/html/HtmlPolicyBuilder.html
 [html-test-l138]: https://github.com/alxlit/autoclave/blob/master/test/autoclave/html_test.clj#L138
 [markdown-abbr]: http://michelf.ca/projects/php-markdown/extra/#abbr
-[markdown-code-1]: michelf.ca/projects/php-markdown/extra/#fenced-code-blocks
+[markdown-code-1]: http://michelf.ca/projects/php-markdown/extra/#fenced-code-blocks
 [markdown-code-2]: https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet#code-and-syntax-highlighting
 [markdown-def-lists]: http://michelf.ca/projects/php-markdown/extra/#def-list
 [markdown-extensions]: http://www.decodified.com/pegdown/api/org/pegdown/Extensions.html

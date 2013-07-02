@@ -60,13 +60,13 @@
         (link-rendering (apply handler node args))))))
 
 (defn processor
-  "Create an instance of PegDownProcessor using keywords to identify which
-   extensions to enable."
+  "Creates a function that produces PegDownProcessor instances with the given
+   extensions enabled."
   ([] (processor :none))
   ([& options]
    (let [options (map options-map options)
          options (if (seq options) (reduce (comp int bit-or) options))]
-     (PegDownProcessor. options))))
+     (fn [] (PegDownProcessor. options)))))
 
 (defn to-html
   "Render a string of Markdown to HTML, optionally using the provided
@@ -76,5 +76,5 @@
   ([processor md]
    (to-html processor (link-renderer {}) md))
   ([processor link-renderer md]
-   (.markdownToHtml processor md link-renderer)))
+   (.markdownToHtml (processor) md link-renderer)))
 

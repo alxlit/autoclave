@@ -8,7 +8,7 @@ such as [JSON Sanitizer][owasp-json], [HTML Sanitizer][owasp-html], and
 ## Installation
 
 ```clj
-:dependencies [[autoclave "0.1.4"]]
+:dependencies [[autoclave "0.1.5"]]
 ```
 
 ## Usage
@@ -174,10 +174,9 @@ Markdown specification.
 
 #### Processors
 
-The usage above is slow because it's building a processor since it wasn't
-provided with one. If you're going to call it a lot you should build one
-yourself and hold onto it. Also, notice it lets HTML through. You can specify
-the processor's behavior like so:
+The `markdown-processor` function returns a processor factory with the
+specified behavior. Suppose, for example, you wanted to suppress all
+user-supplied HTML:
 
 ```clj
 (def processor (markdown-processor :quotes
@@ -186,6 +185,9 @@ the processor's behavior like so:
 (markdown-to-html processor "# Hello, \"<em>world</em>\"")
 ; "<h1>Hello, &ldquo;world&rdquo;</h1>"
 ```
+
+It's also thread-safe.
+
 Here are the available options (adapted from [here][markdown-extensions]):
 
   * <strong>`:abbreviations`</strong> <br/>
@@ -230,7 +232,7 @@ wiki links are rendered by supplying your own LinkRenderer. The
 (def link-renderer (markdown-link-renderer
                      {:auto (fn [node]
                               {:text (->> (.getText node)
-                                          (re-find #"://\.?(\w+).")
+                                          (re-find #"://(\w+).")
                                           second
                                           capitalize)
                                :href (.getText node)

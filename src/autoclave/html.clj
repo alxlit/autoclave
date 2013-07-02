@@ -28,7 +28,8 @@
   (->> options
        (partition 2 1 [])
        (map (fn [[a b]]
-              (if (keyword? a) (list a (if-not (keyword? b) b)))))
+              (if (keyword? a)
+                (list a (if-not (keyword? b) b)))))
        (mapcat identity)
        (partition 2)))
 

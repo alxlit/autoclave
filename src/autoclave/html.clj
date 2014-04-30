@@ -40,7 +40,9 @@
     (let [[f] args]
       (.matching builder (if (fn? f) (attr-policy f) f)))
     :on-elements
-    (.onElements builder (into-array String args))))
+    (.onElements builder (into-array String args))
+    ; unknown option
+    (throw (Exception. (str "Unknown html-policy attribute option " name)))))
 
 (defn- apply-attr-options
   "Apply a sequence of attribute options to an AttributeBuilder."
@@ -120,7 +122,7 @@
   [p]
   (if (instance? HtmlSanitizer$Policy p)
     (if-not (instance? PolicyFactory p)
-      (throw (Exception. (str (class p) "does not support merging.")))
+      (throw (Exception. (str (class p) " does not support merging.")))
       p)
     (apply policy (conj [] p))))
 

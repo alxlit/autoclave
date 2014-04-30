@@ -92,7 +92,9 @@
     :disallow-without-attributes
     (.disallowWithoutAttributes builder (into-array String args))
     :require-rel-nofollow-on-links
-    (.requireRelNofollowOnLinks builder)))
+    (.requireRelNofollowOnLinks builder)
+    ; unknown option
+    (throw (Exception. (str "Unknown html-policy option " name)))))
 
 (defn- apply-builder-options
   [builder options]

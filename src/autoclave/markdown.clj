@@ -23,6 +23,7 @@
    :quotes                Extensions/QUOTES
    :smarts                Extensions/SMARTS
    :smartypants           Extensions/SMARTYPANTS
+   :strikethrough         Extensions/STRIKETHROUGH
    :suppress-all-html     Extensions/SUPPRESS_ALL_HTML
    :suppress-html-blocks  Extensions/SUPPRESS_HTML_BLOCKS
    :suppress-inline-html  Extensions/SUPPRESS_INLINE_HTML

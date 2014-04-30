@@ -211,6 +211,8 @@ Here are the available options (adapted from [here][markdown-extensions]):
     Turn ellipses, dashes, and apostrophes into fancy entities.
   * <strong>`:smartypants`</strong> <br/>
     Enable `:quotes` and `:smarts`.
+  * <strong>`:strikethrough`</strong> <br/>
+    Enable ~~strikethrough~~.
   * <strong>`:suppress-all-html`</strong> <br/>
     Enable both `:suppress-html-blocks` and `:suppress-inline-html`.
   * <strong>`:suppress-html-blocks`</strong> <br/>

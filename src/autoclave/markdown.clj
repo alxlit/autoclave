@@ -12,7 +12,7 @@
                             RefLinkNode
                             WikiLinkNode]))
 
-(def options-map
+(def extensions
   {:abbreviations         Extensions/ABBREVIATIONS
    :all                   Extensions/ALL
    :autolinks             Extensions/AUTOLINKS
@@ -30,7 +30,7 @@
    :wikilinks             Extensions/WIKILINKS})
 
 (defn- link-rendering
-  "Helper for turning a hash-map into a LinkRenderer$Rendering."
+  "Turns a map into a LinkRendering$Rendering."
   [rendering]
   (if (map? rendering)
     (let [{:keys [href text attributes]} rendering
@@ -41,7 +41,7 @@
     rendering))
 
 (defn link-renderer
-  "Helper for proxying the LinkRenderer class."
+  "Create a LinkRenderer."
   [handlers]
   (proxy [LinkRenderer] []
     (render [node & args]
@@ -60,13 +60,13 @@
         (link-rendering (apply handler node args))))))
 
 (defn processor
-  "Creates a function that produces PegDownProcessor instances with the given
-   extensions enabled."
-  ([] (processor :none))
-  ([& options]
-   (let [options (map options-map options)
-         options (if (seq options) (reduce (comp int bit-or) options))]
-     (fn [] (PegDownProcessor. options)))))
+  "Returns a function that produeces PegDownProcessor instances with the given
+  extensions enabled."
+  ([]
+     (processor :none))
+  ([& exts]
+     (let [flags (reduce (comp int bit-or) (map extensions exts))]
+       #(PegDownProcessor. flags))))
 
 (defn to-html
   "Render a string of Markdown to HTML, optionally using the provided

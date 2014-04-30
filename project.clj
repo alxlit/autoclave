@@ -8,7 +8,7 @@
           :src-linenum-anchor-prefix "L"}
   :dependencies [[org.clojure/clojure "1.6.0"]
                  [org.pegdown/pegdown "1.4.2"]
-                 [com.googlecode.owasp-java-html-sanitizer/owasp-java-html-sanitizer "r173"]]
+                 [com.googlecode.owasp-java-html-sanitizer/owasp-java-html-sanitizer "r223"]]
   :java-source-paths ["src/java"])
 
 

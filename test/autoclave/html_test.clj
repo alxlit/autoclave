@@ -1,5 +1,5 @@
 (ns autoclave.html_test
-  "Taken from the OWASP HTML Sanitizer test suite."
+  "Adapted from the OWASP HTML Sanitizer test suite (HtmlPolicyBuilderTest.java)."
   (:require [autoclave.core :refer :all]
             [clojure.test :refer [deftest is]]
             [clojure.string :as string]))
@@ -102,10 +102,9 @@
                 "Stylish Para 2\n")))))
 
 (deftest test-images-allowed
-  (let [policy (html-policy
-                 :allow-elements ["img"]
-                 :allow-attributes ["src" "alt" :on-elements ["img"]]
-                 :allow-url-protocols ["https"])]
+  (let [policy (html-policy :allow-elements ["img"]
+                            :allow-attributes ["src" "alt" :on-elements ["img"]]
+                            :allow-url-protocols ["https"])]
     (is (= (html-sanitize policy example)
            (str "Header\n"
                 "Paragraph 1\n"
@@ -128,17 +127,18 @@
                 "<p><b>Fancy</b> with <i><b>soupy</b></i><b> tags</b>.\n"
                 "</p><p style=\"text-align:center;font-weight:bold\">"
                 "Stylish Para 1</p>\n"
-                "<p style=\"font-weight:bold;direction:rtl;color:#f00\">"
+                "<p style=\"color:red;direction:rtl;font-weight:bold\">"
                 "Stylish Para 2</p>\n")))))
 
 (deftest test-element-transforming
-  (let [policy (html-policy
-                 :allow-elements ["h1" "p" "div"]
-                 :allow-elements [(fn [element-name attrs]
-                                    (.add attrs "class")
-                                    (.add attrs (str "header-" element-name))
-                                    "div")
-                                  "h1"])]
+  (let [policy (html-policy :allow-elements ["h1" "p" "div"]
+                            :allow-elements
+                            [(fn [element-name attrs]
+                               (doto attrs
+                                 (.add "class")
+                                 (.add (str "header-" element-name)))
+                               "div")
+                            "h1"])]
 
     (is (= (html-sanitize policy example)
            (str "<div class=\"header-h1\">Header</div>\n"

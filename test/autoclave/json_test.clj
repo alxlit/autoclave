@@ -1,9 +1,9 @@
 (ns autoclave.json_test
-  "Taken from the OWASP JSON Sanitizer test suite."
+  "Adapted from the OWASP JSON Sanitizer test suite."
   (:require [autoclave.core :refer :all]
             [clojure.test :refer [deftest is]]))
 
-(deftest test-it-works
+(deftest test-all
   (is (= (json-sanitize "") "null" ))
   (is (= (json-sanitize "null") "null" ))
   (is (= (json-sanitize "false") "false"))

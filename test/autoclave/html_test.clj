@@ -164,6 +164,6 @@
                 "Stylish Para 2\n")))))
 
 (deftest test-merge-policies
-  (let [policy (html-policy :BLOCKS :LINKS)]
+  (let [policy (html-merge-policies :BLOCKS :FORMATTING :LINKS)]
     nil))
 

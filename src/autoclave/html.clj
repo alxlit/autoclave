@@ -1,13 +1,14 @@
+1;3409;0c
 (ns autoclave.html
   "Wraps the OWASP HTML Sanitizer library."
   (:require [clojure.string :as string])
   (:import [org.owasp.html AttributePolicy
-                           ElementPolicy
-                           HtmlPolicyBuilder
-                           HtmlSanitizer
-                           HtmlSanitizer$Policy
-                           PolicyFactory
-                           Sanitizers]))
+            ElementPolicy
+            HtmlPolicyBuilder
+            HtmlSanitizer
+            HtmlSanitizer$Policy
+            PolicyFactory
+            Sanitizers]))
 
 (defn- read-options-sequence
   "Read a sequence of keys and optional values into a proper map. Keys are identified
@@ -129,7 +130,7 @@
 (defn merge-policies
   "Merge multiple PolicyFactory and/or option sequences together."
   [& policies]
-  (->> policies (map policy-factory) (reduce #(.and % %))))
+  (->> policies (map policy-factory) (reduce #(.and %1 %2))))
 
 (defn sanitize
   "Apply an HTML sanitization policy (a PolicyFactory object rather than a

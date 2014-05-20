@@ -250,8 +250,10 @@ The available overrides are (adapted from [here][markdown-link-renderer]):
 
   * <strong>`:auto [^AutoLinkNode node]`</strong> <br/>
   * <strong>`:explicit [^ExpLinkNode node ^String text]`</strong> <br/>
+  * <strong>`:explicit-image [^ExpImageNode node ^String text]`</strong> <br/>
   * <strong>`:mail [^MailLinkNode node]`</strong> <br/>
   * <strong>`:reference [^RefLinkNode node ^String url ^String title ^String text]`</strong> <br/>
+  * <strong>`:reference-image [^RefImageNode node ^String url ^String title ^String text]`</strong> <br/>
   * <strong>`:wiki [^WikiLinkNode node]`</strong> <br/>
 
 They should return a map containing the link's `:text`, `:href`, and any other

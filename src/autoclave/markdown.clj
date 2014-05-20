@@ -8,8 +8,10 @@
                         PegDownProcessor]
            [org.pegdown.ast AutoLinkNode
                             ExpLinkNode
+                            ExpImageNode
                             MailLinkNode
                             RefLinkNode
+                            RefImageNode
                             WikiLinkNode]))
 
 (def extensions
@@ -50,13 +52,22 @@
                       AutoLinkNode (:auto handlers)
                       ExpLinkNode
                       (or (:explicit handlers)
-                          (fn [node text] (proxy-super render node text)))
+                          (fn [node text] 
+                            (proxy-super render node text)))
+                      ExpImageNode
+                      (or (:explicit-image handlers)
+                          (fn [node text] 
+                            (proxy-super render node text)))
                       MailLinkNode (:mail handlers)
                       RefLinkNode
                       (or (:reference handlers)
                           (fn [node url title text]
                             (proxy-super render node url title text)))
-                      WikiLinkNode (:wiki handlers))
+                      WikiLinkNode (:wiki handlers)
+                      RefImageNode 
+                      (or (:reference-image handlers)
+                          (fn [node url title text]
+                            (proxy-super render node url title text))))
             handler (or handler (fn [node] (proxy-super render node)))]
         (link-rendering (apply handler node args))))))
 

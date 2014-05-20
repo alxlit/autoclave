@@ -8,7 +8,7 @@ such as [JSON Sanitizer][owasp-json], [HTML Sanitizer][owasp-html], and
 ## Installation
 
 ```clj
-:dependencies [[autoclave "0.1.6"]]
+:dependencies [[autoclave "0.1.7"]]
 ```
 
 ## Usage

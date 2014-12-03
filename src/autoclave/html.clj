@@ -1,4 +1,3 @@
-1;3409;0c
 (ns autoclave.html
   "Wraps the OWASP HTML Sanitizer library."
   (:require [clojure.string :as string])

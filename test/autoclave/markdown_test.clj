@@ -1,4 +1,4 @@
-(ns autoclave.markdown_test
+(ns autoclave.markdown-test
   (:require [autoclave.core :refer :all]
             [clojure.string :refer [capitalize]]
             [clojure.test :refer [deftest is]]))
@@ -13,8 +13,8 @@
 
 (deftest test-none
   (is (= (markdown-to-html example)
-         (str "<h1>Header 1</h1>"
-              "<h2>Header 2</h2>"
+         (str "<h1>Header 1</h1>\n"
+              "<h2>Header 2</h2>\n"
               "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. "
               "<span style=\"color: red\">Some HTML.</span> "
               "http://google.com. "
@@ -23,18 +23,18 @@
 (deftest test-supress-all-html
   (let [processor (markdown-processor :suppress-all-html)]
     (is (= (markdown-to-html processor example)
-           (str "<h1>Header 1</h1>"
-                "<h2>Header 2</h2>"
+           (str "<h1>Header 1</h1>\n"
+                "<h2>Header 2</h2>\n"
                 "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. "
                 "Some HTML. "
                 "http://google.com. "
                 "And here is a [[wiki]] link.</p>")))))
 
 (deftest test-links
-  (let [processor (markdown-processor :autolinks :wikilinks)]
+  (let [processor (markdown-processor :auto-links :wiki-links)]
     (is (= (markdown-to-html processor example)
-           (str "<h1>Header 1</h1>"
-                "<h2>Header 2</h2>"
+           (str "<h1>Header 1</h1>\n"
+                "<h2>Header 2</h2>\n"
                 "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. "
                 "<span style=\"color: red\">Some HTML.</span> "
                 "<a href=\"http://google.com\">http://google.com</a>. "
@@ -42,17 +42,17 @@
 
 (deftest test-link-renderer
   (let [link-renderer (markdown-link-renderer
-                        {:auto (fn [node]
-                                 {:text (->> (.getText node)
-                                             (re-find #"://\.?(\w+).")
-                                             second
-                                             capitalize)
-                                  :href (.getText node)
-                                  :attributes ["class" "autolink"]})})
-        processor (markdown-processor :autolinks)]
+                       {:auto-link (fn [node]
+                                     {:text (->> (.getText node)
+                                                 (re-find #"://\.?(\w+).")
+                                                 second
+                                                 capitalize)
+                                      :href (.getText node)
+                                      :attributes ["class" "autolink"]})})
+        processor (markdown-processor :auto-links)]
     (is (= (markdown-to-html processor link-renderer example)
-           (str "<h1>Header 1</h1>"
-                "<h2>Header 2</h2>"
+           (str "<h1>Header 1</h1>\n"
+                "<h2>Header 2</h2>\n"
                 "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. "
                 "<span style=\"color: red\">Some HTML.</span> "
                 "<a href=\"http://google.com\" class=\"autolink\">Google</a>. "

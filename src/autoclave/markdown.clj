@@ -21,6 +21,7 @@
   {:abbreviations         Extensions/ABBREVIATIONS
    :all                   Extensions/ALL
    :autolinks             Extensions/AUTOLINKS
+   :auto-links            Extensions/AUTOLINKS
    :definitions           Extensions/DEFINITIONS
    :fenced-code-blocks    Extensions/FENCED_CODE_BLOCKS
    :hardwraps             Extensions/HARDWRAPS
@@ -33,8 +34,8 @@
    :suppress-html-blocks  Extensions/SUPPRESS_HTML_BLOCKS
    :suppress-inline-html  Extensions/SUPPRESS_INLINE_HTML
    :tables                Extensions/TABLES
-   :wikilinks             Extensions/WIKILINKS})
-
+   :wikilinks             Extensions/WIKILINKS
+   :wiki-links            Extensions/WIKILINKS})
 
 ;;
 ;; 2014-05-21 Reworked markdown.clj, espeed (James Thornton, http://jamesthornton.com)
@@ -113,14 +114,13 @@
 ;;         (throw IllegalStateException.)))))
 
 
-;; TODO: Be consistent with handler names, e.g. auto to auto-link
 (def default-handlers
   "Default LinkRenderer handlers map; Custom handlers can be passed into the 
    link-renderer func where they will be merged with these."
-  {:auto       (fn [node]      
-                {:href (.getText node)
-                 :text (.getText node)
-                 :attributes nil})
+  {:auto-link  (fn [node]
+                 {:href (.getText node)
+                  :text (.getText node)
+                  :attributes nil})
    :exp-link   (fn [node text]  
                  {:href (.url node)
                   :text text
@@ -150,7 +150,8 @@
   "Returns the default handler func for the node type."
   [node handlers]
   (condp instance? node
-    AutoLinkNode   (:auto handlers)
+    AutoLinkNode   (or (:auto handlers) ; old keyword
+                       (:auto-link handlers))
     ExpLinkNode    (:exp-link handlers)
     ExpImageNode   (:exp-image handlers) 
     MailLinkNode   (:mail-link handlers)
@@ -177,7 +178,6 @@
       (let [handlers (merge default-handlers handlers)
             handler  (select-handler node handlers)]
         (rendering handler node args)))))
-        
 
 (defn processor
   "Returns a function that produeces PegDownProcessor instances with the given
@@ -190,10 +190,7 @@
 
 (defn to-html
   "Render a string of Markdown to HTML, optionally using the provided
-   PegDownProcessor and LinkRenderer.
-   Using Pegdown's default LinkRenderer unless custom handlers are provided.
-   To use the Clojure default link-renderer instead, 
-   change (LinkedRender.) to (link-renderer {})"
+   PegDownProcessor and LinkRenderer."
   ([md]
    (to-html (processor) md))
   ([processor md]

@@ -9,20 +9,23 @@
             PolicyFactory
             Sanitizers]))
 
-(defn- read-options-sequence
-  "Read a sequence of keys and optional values into a proper map. Keys are identified
-  by any of preds returning true."
+(defn read-flat-key-val-sequence
+  "Reads a flat sequence of key and (optional) values into proper key-value
+  pairs. Keys are identified by key? returning true."
   ([options]
-     (read-options-sequence options keyword?))
-  ([options & preds]
-     (let [key? (apply some-fn preds)]
-       (->> options
-            (partition 2 1 [])
-            (map (fn [[a b]]
-                   (when (key? a)
-                     (list a (when-not (key? b) b)))))
-            (mapcat identity)
-            (partition 2)))))
+     (read-flat-key-val-sequence options keyword?))
+  ([options key?]
+     (if (seq options)
+       (loop [[k & tail] options, result []]
+         (if (key? k)
+           (let [[v tail] (if (key? (first tail))
+                            [nil tail]
+                            [(first tail) (rest tail)])]
+             (if (seq tail)
+               (recur tail (conj result [k v]))
+               (conj result [k v])))
+           (throw (Exception. (str "Expected key, got non-key '" k "'")))))
+       (vector))))
 
 (defn- attr-policy [f]
   (proxy [AttributePolicy] []
@@ -47,7 +50,7 @@
 (defn- apply-attr-options
   "Apply a sequence of attribute options to an AttributeBuilder."
   [builder options]
-  (let [options (read-options-sequence options)]
+  (let [options (read-flat-key-val-sequence options)]
     (doseq [[name args] options]
       (apply-attr-option builder name args))
     builder))
@@ -95,12 +98,12 @@
     (.disallowWithoutAttributes builder (into-array String args))
     :require-rel-nofollow-on-links
     (.requireRelNofollowOnLinks builder)
-    ; unknown option
+    ;; unknown option
     (throw (Exception. (str "Unknown html-policy option " name)))))
 
 (defn- apply-builder-options
   [builder options]
-  (doseq [[name args] (read-options-sequence options)]
+  (doseq [[name args] (read-flat-key-val-sequence options)]
     (apply-builder-option builder name args))
   builder)
 

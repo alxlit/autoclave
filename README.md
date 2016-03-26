@@ -5,8 +5,6 @@ to provide a simple, convenient API that builds upon existing, proven
 libraries such as [OWASP JSON Sanitizer][owasp-json], [OWASP HTML
 Sanitizer][owasp-html], and [PegDown][pegdown]
 
-## Installation
-
 [![Clojars Project](https://img.shields.io/clojars/v/alxlit/autoclave.svg)](https://clojars.org/alxlit/autoclave)
 
 ## Usage
@@ -262,7 +260,7 @@ They should return a map containing the link's `:text`, `:href`, and any other
 
 ## License
 
-Copyright © 2013 Alex Little
+Copyright © 2013-2016 Alex Little
 
 Distributed under the Eclipse Public License, the same as Clojure.
 

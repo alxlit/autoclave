@@ -1,15 +1,13 @@
 # autoclave
 
-A library for safely handling various kinds of user input. The idea is to
-provide a simple, convenient API that builds upon existing, proven libraries
-such as [JSON Sanitizer][owasp-json], [HTML Sanitizer][owasp-html], and
-[PegDown][pegdown]
+A library for safely handling various kinds of user input. The idea is
+to provide a simple, convenient API that builds upon existing, proven
+libraries such as [OWASP JSON Sanitizer][owasp-json], [OWASP HTML
+Sanitizer][owasp-html], and [PegDown][pegdown]
 
 ## Installation
 
-```clj
-:dependencies [[autoclave "0.1.7"]]
-```
+[![Clojars Project](https://img.shields.io/clojars/v/alxlit/autoclave.svg)](https://clojars.org/alxlit/autoclave)
 
 ## Usage
 
@@ -19,19 +17,19 @@ such as [JSON Sanitizer][owasp-json], [HTML Sanitizer][owasp-html], and
 
 ### JSON
 
-The `json-sanitize` function takes a string containing JSON-like content and
-produces well-formed JSON. It corrects minor mistakes in encoding and makes it
-easier to embed in HTML and XML documents.
+The `json-sanitize` function takes a string containing JSON-like
+content and produces well-formed JSON. It corrects minor mistakes in
+encoding and makes it easier to embed in HTML and XML documents.
 
 ```clj
 (json-sanitize "{some: 'derpy json' n: +123}")
 ; "{\"some\": \"derpy json\" ,\"\":\"n\" ,\"\":123}"
 ```
 
-More information, quoted from [here][owasp-json-gc]:
+More information, quoted from [here][owasp-json-gh]:
 
-> The output is well-formed JSON as defined by [RFC 4627][rfc-4627]. The output
-satisfies (four) additional properties:
+> The output is well-formed JSON as defined by [RFC 4627][rfc-4627].
+The output satisfies (four) additional properties:
 
 > 1. The output will not contain the substring (case-insensitively)
      `</script` so can be embedded inside an HTML script element without
@@ -47,10 +45,6 @@ satisfies (four) additional properties:
      (no isolated [UTF-16 surrogates][unicode-surrogates]) that are
      [allowed in XML][xml-charsets] unescaped.
 
-Since JSON Sanitizer isn't available from Maven Central or Clojars or any other
-repositories that I know of, its source is included locally, unmodified, in
-[src/java/com/google/json][json-sanitizer-source].
-
 ### HTML
 
 By default, the `html-sanitize` function strips all HTML from a string.
@@ -62,8 +56,8 @@ By default, the `html-sanitize` function strips all HTML from a string.
 
 #### Policies
 
-You can create policies using `html-policy` to whitelist certain HTML elements
-and attributes with fine-grained control.
+You can create policies using `html-policy` to whitelist certain HTML
+elements and attributes with fine-grained control.
 
 ```clj
 (def policy (html-policy :allow-elements ["a"]
@@ -86,7 +80,8 @@ Here are the available options (adapted from [here][html-policy-builder]):
       (java.util.regex.Pattern).
     * `:matching [f]` <br/>
       Allow the named attributes for which `(f element-name attr-name value)`
-      returns a non-nil, possibly adjusted `value`.
+      returns a non-nil, possibly adjusted `value`. [Here][html-test-L197]
+      is an example.
     * `:on-elements [& element-names]` <br/>
       Allow the named attributes only on the named elements.
   * <strong>`:allow-common-block-elements`</strong> <br/>
@@ -128,8 +123,9 @@ Here are the available options (adapted from [here][html-policy-builder]):
 
 #### Predefined policies
 
-Several policies come predefined for convenience. You can access them using the
-`html-policy` or `html-merge-policies` functions (see below).
+Several policies come predefined for convenience. You can access them
+using the `html-policy` or `html-merge-policies` functions (see
+below).
 
 ```clj
 (def policy (html-policy :BLOCKS))
@@ -150,9 +146,9 @@ Several policies come predefined for convenience. You can access them using the
 
 #### Merging policies
 
-You can merge policies using `html-merge-policies`. Provide it with a sequence
-of option sequences or `PolicyFactory` objects (such as those returned by
-`html-policy`).
+You can merge policies using `html-merge-policies`. Provide it with a
+sequence of option sequences or `PolicyFactory` objects (such as those
+returned by `html-policy`).
 
 ```clj
 (def policy (html-merge-policies :BLOCKS :FORMATTING :LINKS))
@@ -160,12 +156,12 @@ of option sequences or `PolicyFactory` objects (such as those returned by
 
 ### Markdown
 
-Yes, there's already a PegDown wrapper for Clojure (called [cegdown][cegdown]).
-But this one's got a few more features and I'm including it for the sake of
-completeness.
+There's already a PegDown wrapper for Clojure (called
+[cegdown][cegdown]).  But this one's got a few more features and I'm
+including it for the sake of completeness.
 
-By default the `markdown-to-html` function simply adheres to the original
-Markdown specification.
+By default the `markdown-to-html` function simply adheres to the
+original Markdown specification.
 
 ```clj
 (markdown-to-html "# Hello, \"<em>world</em>\"")
@@ -194,7 +190,7 @@ Here are the available options (adapted from [here][markdown-extensions]):
     Enable [abbreviations][markdown-abbr].
   * <strong>`:all`</strong> <br/>
     Enable all extensions, excluding the `:suppress-*` ones.
-  * <strong>`:autolinks`</strong> <br/>
+  * <strong>`:auto-links`</strong> <br/>
     Enable automatic linking of URLs.
   * <strong>`:definitions`</strong> <br/>
     Enable [definition lists][markdown-def-lists].
@@ -221,40 +217,41 @@ Here are the available options (adapted from [here][markdown-extensions]):
     Suppress user-supplied inline HTML tags.
   * <strong>`:tables`</strong> <br/>
     Enable [tables][markdown-tables].
-  * <strong>`:wikilinks`</strong> <br/>
+  * <strong>`:wiki-links`</strong> <br/>
     Enable `[[wiki-style links]]` (see below for more information).
 
 #### Link renderers
 
-You can customize how automatic, explicit (or inline), mail, reference, and
-wiki links are rendered by supplying your own LinkRenderer. The
-`markdown-link-renderer` function provides a nicer way to proxy it.
+You can customize how automatic, explicit (or inline), mail,
+reference, and wiki links are rendered by supplying your own
+LinkRenderer. The `markdown-link-renderer` function provides a nicer
+way to proxy it.
 
 ```clj
 (def link-renderer (markdown-link-renderer
-                     {:auto (fn [node]
-                              {:text (->> (.getText node)
-                                          (re-find #"://(\w+).")
-                                          second
-                                          capitalize)
-                               :href (.getText node)
-                               :attributes ["class" "autolink"]})})
-
-(def processor (markdown-processor :autolinks))
+                     {:auto-link (fn [node]
+                                   {:text (->> (.getText node)
+                                               (re-find #"://(\w+).")
+                                               second
+                                               capitalize)
+                                    :href (.getText node)
+                                    :attributes ["class" "auto-link"]})})
+  
+(def processor (markdown-processor :auto-links))
 
 (markdown-to-html processor link-renderer "http://google.com")
-; "<a href=\"http://google.com\" class=\"autolink\">Google</a>"
+; "<a href=\"http://google.com\" class=\"auto-link\">Google</a>"
 ```
 
 The available overrides are (adapted from [here][markdown-link-renderer]):
 
-  * <strong>`:auto [^AutoLinkNode node]`</strong> <br/>
-  * <strong>`:explicit [^ExpLinkNode node ^String text]`</strong> <br/>
-  * <strong>`:explicit-image [^ExpImageNode node ^String text]`</strong> <br/>
-  * <strong>`:mail [^MailLinkNode node]`</strong> <br/>
-  * <strong>`:reference [^RefLinkNode node ^String url ^String title ^String text]`</strong> <br/>
-  * <strong>`:reference-image [^RefImageNode node ^String url ^String title ^String text]`</strong> <br/>
-  * <strong>`:wiki [^WikiLinkNode node]`</strong> <br/>
+  * <strong>`:auto-link [^AutoLinkNode node]`</strong> <br/>
+  * <strong>`:exp-link [^ExpLinkNode node ^String text]`</strong> <br/>
+  * <strong>`:exp-image [^ExpImageNode node ^String text]`</strong> <br/>
+  * <strong>`:mail-link [^MailLinkNode node]`</strong> <br/>
+  * <strong>`:ref-link [^RefLinkNode node ^String url ^String title ^String text]`</strong> <br/>
+  * <strong>`:ref-image [^RefImageNode node ^String url ^String title ^String text]`</strong> <br/>
+  * <strong>`:wiki-link [^WikiLinkNode node]`</strong> <br/>
 
 They should return a map containing the link's `:text`, `:href`, and any other
 `:attributes` (as a flat sequence of strings) as in the example above.
@@ -272,7 +269,8 @@ Distributed under the Eclipse Public License, the same as Clojure.
 [cegdown]: https://github.com/Raynes/cegdown
 [json-sanitizer-source]: https://github.com/alxlit/autoclave/tree/master/src/java/com/google/json
 [html-policy-builder]: https://owasp-java-html-sanitizer.googlecode.com/svn/trunk/distrib/javadoc/org/owasp/html/HtmlPolicyBuilder.html
-[html-test-l138]: https://github.com/alxlit/autoclave/blob/master/test/autoclave/html_test.clj#L138
+[html-test-L138]: https://github.com/alxlit/autoclave/blob/master/test/autoclave/html_test.clj#L138
+[html-test-L197]: https://github.com/alxlit/autoclave/blob/master/test/autoclave/html_test.clj#L197
 [markdown-abbr]: http://michelf.ca/projects/php-markdown/extra/#abbr
 [markdown-code-1]: http://michelf.ca/projects/php-markdown/extra/#fenced-code-blocks
 [markdown-code-2]: https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet#code-and-syntax-highlighting
@@ -283,7 +281,7 @@ Distributed under the Eclipse Public License, the same as Clojure.
 [markdown-link-renderer]: http://www.decodified.com/pegdown/api/org/pegdown/LinkRenderer.html
 [owasp]: https://www.owasp.org/
 [owasp-json]: https://www.owasp.org/index.php/OWASP_JSON_Sanitizer
-[owasp-json-gc]: https://code.google.com/p/json-sanitizer/
+[owasp-json-gh]: https://github.com/owasp/json-sanitizer#output
 [owasp-html]: https://www.owasp.org/index.php/OWASP_Java_HTML_Sanitizer
 [pegdown]: https://github.com/sirthias/pegdown
 [rfc-4627]: http://www.ietf.org/rfc/rfc4627.txt

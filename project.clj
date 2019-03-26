@@ -12,7 +12,7 @@
                  [com.mikesamuel/json-sanitizer "1.1"
                   :exclusions [com.google.guava/guava
                                com.google.code.findbugs/jsr305]]
-                 [com.googlecode.owasp-java-html-sanitizer/owasp-java-html-sanitizer "20160203.1"
+                 [com.googlecode.owasp-java-html-sanitizer/owasp-java-html-sanitizer "20190325.1"
                   :exclusions [commons-codec
                                com.google.guava/guava
                                com.google.code.findbugs/jsr305]]])

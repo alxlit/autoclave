@@ -9,7 +9,7 @@
                  [org.pegdown/pegdown "1.6.0"]
                  [commons-codec "1.4"]
                  [com.google.guava/guava "11.0"]
-                 [com.mikesamuel/json-sanitizer "1.1"
+                 [com.mikesamuel/json-sanitizer "1.2.2"
                   :exclusions [com.google.guava/guava
                                com.google.code.findbugs/jsr305]]
                  [com.googlecode.owasp-java-html-sanitizer/owasp-java-html-sanitizer "20190325.1"
